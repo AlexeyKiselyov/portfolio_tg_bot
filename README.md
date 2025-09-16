@@ -37,6 +37,6 @@ Preflight `OPTIONS` is supported. Response includes `Access-Control-Allow-Origin
 
 ## Notes
 
-- Uses Node.js 20 runtime (configured via `vercel.json`).
+- Uses Node.js 20 runtime (configured inside the function via `exports.config`).
 - No dependencies required.
 - Keep your bot token secret; do not commit it.
