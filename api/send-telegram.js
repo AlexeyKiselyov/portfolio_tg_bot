@@ -4,6 +4,16 @@ exports.config = {
   runtime: "nodejs20.x",
 };
 
+// Simple HTML escape to keep user input safe when using parse_mode: 'HTML'
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 module.exports = async (req, res) => {
   const origin = req.headers.origin || "";
   const allowed = (process.env.ALLOWED_ORIGINS || "*")
@@ -81,13 +91,12 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const text = [
-    "New portfolio message:",
-    `Name: ${name}`,
-    `Email: ${email}`,
-    "Message:",
-    message,
-  ].join("\n");
+  const text =
+    `<b>New portfolio message</b>\n\n` +
+    `<b>Name:</b> ${escapeHtml(name)}\n` +
+    `<b>Email:</b> ${escapeHtml(email)}\n` +
+    `<b>Message:</b>\n` +
+    `${escapeHtml(message)}`;
 
   try {
     const tgRes = await fetch(
@@ -98,6 +107,7 @@ module.exports = async (req, res) => {
         body: JSON.stringify({
           chat_id: chatId,
           text,
+          parse_mode: "HTML",
           disable_web_page_preview: true,
         }),
       }
