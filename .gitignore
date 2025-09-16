@@ -1,0 +1,8 @@
+# Node/Vercel
+node_modules/
+.vercel/
+.env
+.env.*
+dist/
+*.log
+*.local
